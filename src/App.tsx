@@ -130,7 +130,7 @@ function App() {
       {/* Sobre o casal */}
       <section className="mt-8 px-5">
         <h2 className="mb-3 font-display text-xl text-foreground">Sobre o casal</h2>
-        <CountdownCard sinceISO="2023-04-01T00:00:00" photo={g2} name="Felipe e Juliana" sinceLabel="Juntos desde 2024" />
+        <CountdownCard sinceISO="2024-04-01T00:00:00" photo={g2} name="Felipe e Juliana" sinceLabel="Juntos desde 2024" />
       </section>
 
       {/* Mensagem especial */}
