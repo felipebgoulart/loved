@@ -1,0 +1,59 @@
+name: CI / CD - Deployment
+
+on:
+  push:
+    branches: ['main'] # Certifique-se de que sua branch principal se chama 'prod' mesmo (ou mude para 'main')
+  workflow_dispatch:
+
+# Permissões necessárias para o GitHub Pages ler e publicar os arquivos
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Evita que deploys simultâneos se atropelem
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        # O comando padrão do React costuma ser apenas "npm run build"
+        run: npm run build
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # ATENÇÃO: Se você usa Vite, o padrão é './dist'. 
+          # Se você usa Create React App, mude para './build'.
+          path: '.output/public'
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
