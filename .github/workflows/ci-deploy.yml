@@ -2,7 +2,7 @@ name: CI / CD - Deployment
 
 on:
   push:
-    branches: ['main'] # Certifique-se de que sua branch principal se chama 'prod' mesmo (ou mude para 'main')
+    branches: ['main']
   workflow_dispatch:
 
 # Permissões necessárias para o GitHub Pages ler e publicar os arquivos
@@ -33,7 +33,6 @@ jobs:
         run: npm ci
 
       - name: Build project
-        # O comando padrão do React costuma ser apenas "npm run build"
         run: npm run build
 
       - name: Setup GitHub Pages
@@ -42,9 +41,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # ATENÇÃO: Se você usa Vite, o padrão é './dist'. 
-          # Se você usa Create React App, mude para './build'.
-          path: '.output/public'
+          # Alterado para './dist', que é onde o Vite coloca os arquivos estáticos
+          path: './dist'
 
   deploy:
     needs: build
